@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Favorite Movies</title>
+  <style type="text/css">
+    #movieInfo div {
+      border: 1px solid black;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Movie Search</h1>
+
+    
+    <div id="buttons-view"></div>
+
+    <form id="movie-form">
+      <label for="animal-input">add animal</label>
+      <input type="text" id="animal-input"><br>
+
+      
+      <input id="add-animal" type="submit" value="add animal">
+    </form>
+
+    <div id="animalInfo"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+      var animals = ["Dogs", "Cats"];
+
+      
+      function renderButtons() {
+        $('#buttons-view').empty();
+        
+        for (var i=0; i<animals.length; i++){
+        	createButton(animals[i]);
+        }
+
+      }
+
+      function createButton(mName){
+      	var b = $('<button>');
+      	b.attr('class', 'bMovie')
+      	b.text(mName);
+      	$('#buttons-view').append(b);
+      }
+
+      $(document).on('click', '.bMovie', function(){
+      	var movieName = $(this).text();
+      	// movieName.replace(\ \g, '+');
+      	
+      	var u = "https://www.omdbapi.com/?t=" + movieName + "&apikey=trilogy"
+
+      
+      	$.ajax({
+      		url: u,
+      		method: 'GET'
+      	}).then(function(response){
+
+      		var pTitle = $('<p>').text(response.Title);
+          var pActors = $('<p>').text(response.Actors);
+          var pPlot = $('<p>').text(response.Plot);
+          var imgPoster = $('<img>').attr('src', response.Poster);
+          var d = $('<div>').append(pTitle, imgPoster, pPlot, pActors);
+      		$('#movieInfo').prepend(d);
+      	})
+      });
+
+      // This function handles events where one button is clicked
+      $("#add-movie").on("click", function() {
+        var v = $("#animal-input").val();
+
+        movies.push(v);
+        createButton(v);
+        
+        event.preventDefault();
+
+        $("#animal-input").val("");
+      });
+
+      // Calling the renderButtons function to display the initial list of movies
+      renderButtons();
+    </script>
+  </div>
+</body>
+
+</html>
